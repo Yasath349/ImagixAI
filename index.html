@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Imagix AI — Image Generator</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Background -->
+  <div class="bg-grid"></div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast"></div>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="logo">
+      <span class="logo-icon">✦</span>
+      <span class="logo-text">Imagix<span class="logo-ai">AI</span></span>
+    </div>
+    <nav class="nav-pills">
+      <span class="nav-pill active">Generator</span>
+      <span class="nav-pill" id="nav-gallery">Gallery</span>
+    </nav>
+    <div class="header-badge">
+      <span class="pulse-dot"></span> Live
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <p class="hero-tag">✦ AI-POWERED CREATION</p>
+    <h1 class="hero-title">Turn Words Into<br><em>Stunning Visuals</em></h1>
+    <p class="hero-sub">Type a prompt. Choose a style. Watch your imagination render.</p>
+  </section>
+
+  <!-- Generator Card -->
+  <main class="generator-wrap">
+    <div class="gen-card">
+
+      <!-- Prompt Area -->
+      <div class="prompt-section">
+        <label class="field-label">YOUR PROMPT</label>
+        <div class="prompt-box">
+          <textarea id="prompt" placeholder="A neon-lit samurai standing atop a cyberpunk skyscraper at midnight, rain falling, ultra detailed…" rows="3"></textarea>
+          <div class="prompt-actions">
+            <button class="icon-btn" id="copy-prompt-btn" title="Copy prompt">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            </button>
+            <button class="icon-btn" id="clear-btn" title="Clear">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Suggestion Chips -->
+        <div class="chips-label">Try a suggestion →</div>
+        <div class="chips" id="chips"></div>
+      </div>
+
+      <!-- Controls Row -->
+      <div class="controls-row">
+
+        <div class="control-group">
+          <label class="field-label">STYLE</label>
+          <div class="style-grid" id="style-grid"></div>
+        </div>
+
+        <div class="control-group">
+          <label class="field-label">ASPECT RATIO</label>
+          <div class="ratio-grid" id="ratio-grid"></div>
+        </div>
+
+        <div class="control-group full-width">
+          <label class="field-label">NEGATIVE PROMPT <span class="optional">(optional)</span></label>
+          <input type="text" id="negative-prompt" class="neg-input" placeholder="blurry, low quality, distorted, watermark, text…" />
+        </div>
+
+      </div>
+
+      <!-- Generate Button -->
+      <button class="gen-btn" id="gen-btn">
+        <span class="gen-btn-text">
+          <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+          </svg>
+          Generate Image
+        </span>
+        <span class="gen-btn-loading hidden">
+          <span class="spinner"></span> Generating…
+        </span>
+      </button>
+
+    </div>
+
+    <!-- Output Panel -->
+    <div class="output-panel" id="output-panel">
+
+      <!-- Empty State -->
+      <div class="empty-state" id="empty-state">
+        <div class="empty-icon">
+          <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="8" y="8" width="48" height="48" rx="8" stroke="currentColor" stroke-width="2" stroke-dasharray="6 4"/>
+            <circle cx="22" cy="24" r="4" stroke="currentColor" stroke-width="2"/>
+            <path d="M8 40l12-10 8 8 8-6 12 10" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <p class="empty-title">Your canvas awaits</p>
+        <p class="empty-sub">Enter a prompt and hit Generate</p>
+      </div>
+
+      <!-- Loading State -->
+      <div class="loading-state hidden" id="loading-state">
+        <div class="loading-visual">
+          <div class="loading-ring"></div>
+          <div class="loading-ring r2"></div>
+          <div class="loading-ring r3"></div>
+          <div class="loading-core">✦</div>
+        </div>
+        <p class="loading-text" id="loading-text">Initializing…</p>
+        <div class="loading-bar-wrap"><div class="loading-bar" id="loading-bar"></div></div>
+      </div>
+
+      <!-- Image Result -->
+      <div class="result-state hidden" id="result-state">
+        <div class="img-wrap">
+          <img id="result-img" src="" alt="Generated image" />
+          <div class="img-overlay">
+            <button class="overlay-btn" id="download-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download
+            </button>
+            <button class="overlay-btn secondary" id="regenerate-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.96"/></svg>
+              Regenerate
+            </button>
+          </div>
+        </div>
+        <div class="result-meta">
+          <span class="result-prompt-label">PROMPT</span>
+          <p class="result-prompt-text" id="result-prompt-text"></p>
+          <span class="result-chip" id="result-style-chip"></span>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Gallery Section -->
+  <section class="gallery-section" id="gallery-section">
+    <div class="gallery-header">
+      <h2 class="gallery-title">Generation History</h2>
+      <button class="clear-gallery-btn" id="clear-gallery-btn">Clear All</button>
+    </div>
+    <div class="gallery-empty hidden" id="gallery-empty">
+      <p>No images generated yet. Start creating!</p>
+    </div>
+    <div class="gallery-grid" id="gallery-grid"></div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <span>✦ Imagix AI — Powered by Pollinations AI</span>
+    <span>Built with pure HTML · CSS · JS</span>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
